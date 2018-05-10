@@ -17,7 +17,6 @@ class UserController extends Controller
     public function indexSearch(Request $request)
     {
         $name = $request('name');
-
     }
 
 

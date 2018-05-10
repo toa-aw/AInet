@@ -1,7 +1,5 @@
 @extends('layouts.master') 
-
-@section('title', 'Register')
-
+@section('title', 'Register') 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -9,7 +7,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group row">
@@ -61,10 +59,22 @@
 
                             <div class="col-md-6">
                                 <input id="phone" type="tel" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ old('phone') }}"
-                                     autofocus> @if ($errors->has('phone'))
+                                    autofocus> @if ($errors->has('phone'))
                                 <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('phone') }}</strong>
                                     </span>@endif
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="photo" class="col-md-4 col-form-label text-md-right">{{ __('Profile Photo') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="photo" type="file"  name="profile_photo"
+                                    autofocus> @if ($errors->has('profile_photo'))
+                                <span class="invalid-feedback">
+                                    <strong>{{ $errors->first('profile_photo') }}</strong>
+                                </span>@endif
                             </div>
                         </div>
 
