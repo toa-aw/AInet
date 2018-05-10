@@ -7,5 +7,5 @@
     <p>Number of Users: {{ $users}}</p>
     <p>Number of Movements: {{ $movements}}</p>
     <p>Number of Accounts: {{ $accounts}}</p>
-</div>
+</div>  
 @endsection

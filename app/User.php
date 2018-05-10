@@ -49,4 +49,11 @@ class User extends Authenticatable
 
         return 'unknown';
     }
+
+    public function isAdmin (){
+        if($this->admin == 1){
+            return true;
+        }
+        return false;
+    }
 }

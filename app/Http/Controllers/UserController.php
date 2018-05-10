@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -12,15 +14,6 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        $users = \App\User::all();
-        return view('users.index', compact('users'));
-    }
-
-    public function indexSearch(Request $request)
-    {
-        $name = $request('name');
-    }
+ 
 
 }
