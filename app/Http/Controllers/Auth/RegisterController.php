@@ -72,7 +72,7 @@ class RegisterController extends Controller
     
         if (isset($data['profile_photo'])) {
             $path =  $data['profile_photo']->store('profiles', 'public');
-            $photo = Storage::basename($path); 
+            $photo = basename($path);
         }
 
         return User::create([
@@ -80,7 +80,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'] ?? null,
-            'profile_photo' => $photo ?? null,
+            'profile_photo' => $photo,
         ]);  
 
     }

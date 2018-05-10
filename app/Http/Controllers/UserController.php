@@ -1,15 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 
-
 class UserController extends Controller
-
-
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
-    {   
+    {
         $users = \App\User::all();
         return view('users.index', compact('users'));
     }
@@ -19,6 +23,4 @@ class UserController extends Controller
         $name = $request('name');
     }
 
-
 }
-
