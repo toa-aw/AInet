@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use \App\User;
 use \Illuminate\Http\Response;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -12,20 +13,59 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
     }
-    public function index()
+
+    public function index(Request $request)
     {
-        if (Auth::user()->isAdmin()) {
-            $users = \App\User::all();
-            return view('users.index', compact('users'));
+          $this->authorize('list', User::class);       
+            $users = User::query();
 
-        }
-        return new Response('Forbidden', 403);
+            if($request->input('name')){
+                $users = $users->findUsersByName($request->name);   
+            }
 
+            if($request->input('type')){
+                    $users = $users->findUsersByRank($request->type);
+            }
 
+            if($request->input('status')){
+                $users = $users->findUsersByStatus($request->status);
+            }
+            
+            
+            //dd($users->toSql());
+            $users = $users->paginate(40);
+            return response()->view('users.index', compact('users'));
+    }
+    
+    public function block(User $user){       
+        $this->authorize('alterStatus', $user);
+                $user['blocked'] = true;
+                $user->save();
+                return redirect()->route('users')->with('success', 'User'.$user['name'].'has been blocked.');
     }
 
-    public function indexSearch(Request $request)
-    {
-        $name = $request('name');
+    public function unblock(User $user){
+        $this->authorize('alterStatus', $user);
+
+                $user['blocked'] = false;
+                $user->save();
+                return redirect()->route('users')->with('success', 'User'.$user['name'].'has been unblocked');        
     }
+
+    public function promote(User $user){
+        $this->authorize('alterRank', $user);
+
+             $user['admin'] = true;
+             $user->save();
+             return redirect()->route('users')->with('success', 'User'.$user['name'].'has been promoted.');
+    }
+
+    public function demote(User $user){
+       $this->authorize('alterRank', $user);
+
+                $user['admin'] = false;
+                $user->save();
+                return redirect()->route('users')->with('success', 'User'.$user['name'].'has been demoted.');
+    }
+
 }
