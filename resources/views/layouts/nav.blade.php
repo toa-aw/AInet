@@ -13,12 +13,11 @@
         <li><a href="{{ route('login') }}">{{ __('Login') }}</a></li>
         <li><a href="{{ route('register') }}">{{ __('Register') }}</a></li>
         @else
-            <a href="#">{{ Auth::user()->name }} </a>
+            {{-- <a class="btn btn-xs btn-primary" ">Edit</a> --}}
 
             <div>
-                <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                     {{ __('Logout') }}
+                <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}
+                <a class="pull-right" href="{{ route('password.edit', Auth::id()) }}"> {{ __('Change Password')  }}
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST">
                     <action="{{ route('logout') }}" method="POST">
