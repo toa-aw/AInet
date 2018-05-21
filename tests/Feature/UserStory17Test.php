@@ -41,8 +41,8 @@ class UserStory17Test extends BaseAccountsTest
         // Given, When, Then
         $this->actingAs($this->mainUser)
             ->post('/account')
-            ->assertSessionHasErrors(['account_type_id', 'code', 'date', 'start_balance'])
-            ->assertSessionHasNoErrors(['description']);
+            ->assertSessionHasErrors(['account_type_id', 'code', 'start_balance'])
+            ->assertSessionHasNoErrors(['description', 'date']);
     }
 
     // @codingStandardsIgnoreStart
@@ -61,6 +61,25 @@ class UserStory17Test extends BaseAccountsTest
             ->post('/account', $data)
             ->assertSessionHasErrors(['account_type_id'])
             ->assertSessionHasNoErrors(['description', 'code', 'date', 'start_balance']);
+    }
+
+    // @codingStandardsIgnoreStart
+    /** @test */
+    public function account_creation_use_proper_rule_to_validate_account_type_id()
+    {
+        // @codingStandardsIgnoreEnd
+        // Given, When, Then
+        DB::table('account_types')->insert(['id' => 2000000, 'name' => 'just a new type']);
+
+        $data = [
+            'account_type_id' => 2000000,
+            'code' => $this->faker->uuid,
+            'date' => Carbon::now()->format('Y-m-d'),
+            'start_balance' => 0,
+        ];
+        $this->actingAs($this->mainUser)
+            ->post('/account', $data)
+            ->assertSessionHasNoErrors(['account_type_id']);
     }
 
     // @codingStandardsIgnoreStart
@@ -129,7 +148,7 @@ class UserStory17Test extends BaseAccountsTest
         $data = [
             'account_type_id' => $this->types[3]->id,
             'code' => $this->faker->uuid,
-            'date' => Carbon::now(),
+            'date' => Carbon::now()->format('Y-m-d'),
             'start_balance' => '8989asdasd',
         ];
 
@@ -148,13 +167,42 @@ class UserStory17Test extends BaseAccountsTest
         $data = [
             'account_type_id' => $this->types->last()->id,
             'code' => $this->faker->uuid,
+            'start_balance' => 0,
+        ];
+        $minDate = Carbon::now();
+        $minDate->setTime($minDate->hour, $minDate->minute, $minDate->second);
+
+        $this->actingAs($this->mainUser)
+            ->post('/account', $data)
+            ->assertSuccessfulOrRedirect();
+
+        $data['owner_id'] = $this->mainUser->id;
+        $data['current_balance'] = $data['start_balance'];
+        $data['last_movement_date'] = null;
+
+        $this->assertDatabaseHas('accounts', $data);
+
+        $storedAccount = DB::table('accounts')->where($data)->first();
+        $this->assertNotNull($storedAccount->date);
+        $this->assertTrue(new Carbon($storedAccount->date) >= $minDate);
+    }
+
+    // @codingStandardsIgnoreStart
+    /** @test */
+    public function a_regular_user_can_create_an_account_with_a_specific_date()
+    {
+        // @codingStandardsIgnoreEnd
+        // Given, When, Then
+        $data = [
+            'account_type_id' => $this->types->last()->id,
+            'code' => $this->faker->uuid,
             'date' => Carbon::now()->format('Y-m-d'),
             'start_balance' => 0,
         ];
 
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->mainUser->id;
         $data['current_balance'] = $data['start_balance'];
@@ -162,6 +210,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->assertDatabaseHas('accounts', $data);
     }
+
 
     // @codingStandardsIgnoreStart
     /** @test */
@@ -178,7 +227,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->mainUser->id;
         $data['current_balance'] = $data['start_balance'];
@@ -202,7 +251,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->mainUser->id;
         $data['current_balance'] = $data['start_balance'];
@@ -217,7 +266,7 @@ class UserStory17Test extends BaseAccountsTest
     {
         // @codingStandardsIgnoreEnd
         // Given, When, Then
-        $this->seedUserAccount($this->adminUser, $this->types[0]->id, ['code' => 'test-code']);
+        $this->seedUserAccount($this->adminUser->id, $this->types[0]->id, ['code' => 'test-code']);
         $data = [
             'account_type_id' => $this->types->last()->id,
             'code' => 'test-code',
@@ -227,7 +276,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->mainUser->id;
         $data['current_balance'] = $data['start_balance'];
@@ -252,7 +301,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->mainUser->id;
         $data['current_balance'] = $data['start_balance'];
@@ -276,7 +325,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->actingAs($this->adminUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->adminUser->id;
         $data['current_balance'] = $data['start_balance'];
@@ -302,7 +351,7 @@ class UserStory17Test extends BaseAccountsTest
 
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful()
+            ->assertSuccessfulOrRedirect()
             ->assertSessionHasNoErrors('account_type_id');
 
         $this->assertDatabaseHas('accounts', $data);
@@ -324,7 +373,7 @@ class UserStory17Test extends BaseAccountsTest
         ];
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['owner_id'] = $this->mainUser->id;
 
@@ -347,7 +396,7 @@ class UserStory17Test extends BaseAccountsTest
         ];
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['current_balance'] = 1;
 
@@ -370,7 +419,7 @@ class UserStory17Test extends BaseAccountsTest
         ];
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['last_movement_date'] = null;
 
@@ -393,7 +442,7 @@ class UserStory17Test extends BaseAccountsTest
         ];
         $this->actingAs($this->mainUser)
             ->post('/account', $data)
-            ->assertSuccessful();
+            ->assertSuccessfulOrRedirect();
 
         $data['deleted_at'] = null;
 

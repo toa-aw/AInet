@@ -24,7 +24,7 @@
 
         </div>
         @if(session('success'))
-            {{-- @include('partials.success') --}}
+             @include('partials.success')
          @endif 
 
     @yield('content')

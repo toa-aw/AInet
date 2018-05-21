@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App;
 use Illuminate\Http\Request;
 
 
 class UserController extends Controller
-
-
 {
     public function index()
     {   

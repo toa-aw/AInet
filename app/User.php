@@ -49,4 +49,14 @@ class User extends Authenticatable
 
         return 'unknown';
     }
+
+    public function accounts()
+    {
+        return $this->hasMany('App\Account', 'owner_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->type === '1';
+    }
 }
