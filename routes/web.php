@@ -22,5 +22,9 @@ Route::patch('/users/{user}/unblock', 'AdminController@unblock')->name('users.un
 Route::patch('/users/{user}/promote', 'AdminController@promote')->name('users.promote');
 Route::patch('/users/{user}/demote', 'AdminController@demote')->name('users.demote');
 
+Route::get('/me/password', 'UserController@editPassword')->name('password.edit');
 Route::patch('/me/password', 'UserController@updatePassword')->name('password.update');
+
+Route::get('/me/profile', 'UserController@edit')->name('user.edit');
+Route::put('/me/profile', 'UserController@update')->name('user.update');
 

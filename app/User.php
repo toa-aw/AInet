@@ -83,7 +83,8 @@ class User extends Authenticatable
         }    
     }
 
-    public static function buildQuery(Request $request){
+    public static function buildQuery(Request $request)
+    {
         // dd($request->name);
         $query = User::query();
         dd($query);
