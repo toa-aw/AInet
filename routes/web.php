@@ -15,6 +15,13 @@ Route::get('/', 'HomeController@index')->name('home');;
 
 Auth::routes();
 
+Route::get('/users', 'UserController@index')->name('users');
+
+Route::get('/account', 'AccountController@create')->name('accounts.create');
+Route::post('/account', 'AccountController@store')->name('accounts.store');
+
+Route::get('/account/{account}', 'AccountController@edit')->name('accounts.edit');
+Route::put('/account/{account}', 'AccountController@update')->name('accounts.update');
 Route::get('/users', 'AdminController@index')->name('users');
 
 Route::patch('/users/{user}/block', 'AdminController@block')->name('users.block');

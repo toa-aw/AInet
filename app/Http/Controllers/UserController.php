@@ -1,5 +1,7 @@
 <?php
 
+namespace App;
+use Illuminate\Http\Request;
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,6 +14,11 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function index()
+    {   
+        $users = \App\User::all();
+        return view('users.index', compact('users'));
+    }
 
     public function __construct()
     {

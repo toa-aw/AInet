@@ -55,7 +55,7 @@ class User extends Authenticatable
 
     public function isAssociate()
     {
-        return 
+        return null;
     }
 
     public function isAdmin (){

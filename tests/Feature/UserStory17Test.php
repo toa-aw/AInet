@@ -147,7 +147,7 @@ class UserStory17Test extends BaseAccountsTest
         $data = [
             'account_type_id' => $this->types[3]->id,
             'code' => $this->faker->uuid,
-            'date' => Carbon::now(),
+            'date' => Carbon::now()->format('Y-m-d'),
             'start_balance' => '8989asdasd',
         ];
 

@@ -21,10 +21,10 @@
     @include('partials.menu') --}} @endif
 
         </div>
-        @if(session('success')) {{--
-    @include('partials.success') --}}
-     @endif 
-    
+        @if(session('success'))
+             @include('partials.success')
+         @endif 
+
     @yield('content')
 
     </div>
