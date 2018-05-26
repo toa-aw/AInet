@@ -1,6 +1,6 @@
 @csrf
 <div class="form-group">
-    <label for="inputType">Account Type</label>
+    <label for="inputType">{{ __('Account Type') }}</label>
     <select name="account_type_id" id="inputType" class="form-control">
         <option disabled selected> -- select an option -- </option>
         <option {{is_selected(old('account_type_id', $account->account_type_id), '1' )}} value="1">Bank Account</option>
@@ -12,7 +12,7 @@
 </div>
 
 <div class="form-group">
-    <label for="inputCode">Code</label>
+    <label for="inputCode">{{ __('Code') }}</label>
     <input
         type="text" class="form-control"
         name="code" id="inputCode"
@@ -20,7 +20,7 @@
 </div>
 
 <div class="form-group">
-    <label for="inputStartBalance">Start Balance</label>
+    <label for="inputStartBalance">{{ __('Start Balance') }}</label>
     <input
         type="text" class="form-control"
         name="start_balance" id="inputStartBalance"
@@ -28,7 +28,7 @@
 </div>
 
 <div class="form-group">
-    <label for="inputFullname">Description</label>
+    <label for="inputFullname">{{ __('Description') }}</label>
     <input
         type="text" class="form-control" 
         name="description" id="inputDescription" 

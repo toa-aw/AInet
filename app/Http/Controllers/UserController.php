@@ -40,7 +40,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request)
     {
         $user = Auth::user();
-        $this->authorize('editUser', $user);;
+        $this->authorize('editUser', $user);
         $data = $request->validated();
 
          $photo = null;

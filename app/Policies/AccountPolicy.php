@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Account;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AccountPolicy
@@ -42,7 +43,8 @@ class AccountPolicy
      */
     public function update(User $user, Account $account)
     {
-        return $user->isAdmin() || $user->id === $account->owner_id;
+        $user = Auth::user();
+        return $user->isAdmin() || $user->id == $account->owner_id;
     }
 
     /**

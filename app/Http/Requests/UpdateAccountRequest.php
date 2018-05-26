@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateAccountRequest extends FormRequest
 {
@@ -26,10 +27,20 @@ class UpdateAccountRequest extends FormRequest
         $account = \Route::current()->parameter('account');
         return [
             'account_type_id' => 'required|exists:account_types,id',
-            'date' => 'nullable|date_format:Y-m-d',
-            'code' => 'required|unique:accounts,code'.$account->id,            
+            'date' => 'required|date_format:Y-m-d',
+            'code' => 'required|unique:accounts,code,'.$account->id,            
             'description' => 'nullable',            
             'start_balance' => 'required|numeric|regex:/^-?[0-9]+(?:\.[0-9]{2})?$/',
         ];
     }
+
+    /*public function withValidator($validator){
+        $validator->after(function ($validator) {
+            $account = \Route::current()->parameter('account');
+            $user = Auth::user();    
+            if ($user->id != $account->owner_id) {
+                $validator->errors()->add('id', 'Utilizador invalido');
+            }
+        });
+    }*/
 }

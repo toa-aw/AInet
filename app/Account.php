@@ -43,4 +43,14 @@ class Account extends Model
 
         return 'unknown';
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
+    public function movements()
+    {
+        return $this->hasMany('App\Movement', 'account_id');
+    }
 }
