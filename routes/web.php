@@ -28,3 +28,5 @@ Route::patch('/me/password', 'UserController@updatePassword')->name('password.up
 Route::get('/me/profile', 'UserController@edit')->name('user.edit');
 Route::put('/me/profile', 'UserController@update')->name('user.update');
 
+Route::get('/profiles', 'UserController@profiles')->name('profiles');
+

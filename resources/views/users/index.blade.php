@@ -64,8 +64,7 @@
 
             </td>
 
-            <td @if($user->admin)) class="user-is-admin" @endif>
-                    
+            <td @if($user->admin)) class="user-is-admin" @endif>     
                  {{ $user->adminToStr() }}
             </td>
             <td>

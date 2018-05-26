@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class User extends Authenticatable
 {
@@ -49,6 +51,11 @@ class User extends Authenticatable
         }
 
         return 'unknown';
+    }
+
+    public function isAssociate()
+    {
+        return 
     }
 
     public function isAdmin (){
@@ -109,4 +116,15 @@ class User extends Authenticatable
 
         return $users;
     }
+
+    public function associates ()
+    {
+        return $this->belongsToMany('User', 'associate_members', 'main_user_id', 'associated_user_id');
+    }
+
+    public function associatedWith()
+    {
+        return $this->belongsToMany('User', 'associate_members', 'associated_user_id', 'main_user_id');
+    }
+
 }

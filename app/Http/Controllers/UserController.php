@@ -8,6 +8,7 @@ use App\User;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -17,9 +18,16 @@ class UserController extends Controller
         $this->middleware('auth');
     }
 
-    public function groupPrfofiles()
+    public function profiles(Request $request)
     {
-        
+        $users = User::query();
+
+        if($request->filled('name')){
+            $users = $users->findUsersByName($request->name);   
+        }
+       $users = $users->paginate(40);
+    //    dd($users);
+        return view('users.profiles', compact('users'));
     }
 
     public function edit()
@@ -36,7 +44,7 @@ class UserController extends Controller
         $this->authorize('editUser', $user);;
         $data = $request->validated();
 
-         $photo = null;
+        $photo = null;
         if (isset($data['profile_photo'])) {
             $path =  $data['profile_photo']->store('profiles', 'public');
             $photo = basename($path);
