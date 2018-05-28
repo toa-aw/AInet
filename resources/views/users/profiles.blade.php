@@ -43,7 +43,12 @@
 
             <td>
                 @if($user->isAssociate())
+                yes
+                @else
+                no
                 @endif
+                
+               
             </td>
             
         </tr>

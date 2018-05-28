@@ -15,7 +15,7 @@ class UserPolicy
       return $user->id == $model->id;
     }
 
-        public function list(User $user)
+    public function list(User $user)
     {
         return $user->isAdmin();        
     }

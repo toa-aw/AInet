@@ -14,15 +14,23 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index()
-    {   
-        $users = \App\User::all();
-        return view('users.index', compact('users'));
-    }
-
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function associatedTo()
+    {
+        $users = Auth::user()->associatedWith()->paginate(40);
+        $bool = true;
+        return view('users.associates', compact('users', 'bool'));
+    }
+
+    public function myAssociates()
+    {
+        $users = Auth::user()->associates()->paginate(40);
+        $bool = false;
+        return view('users.associates', compact('users', 'bool'));
     }
 
     public function profiles(Request $request)
