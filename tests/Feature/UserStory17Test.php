@@ -54,7 +54,6 @@ class UserStory17Test extends BaseAccountsTest
         $data = [
             'account_type_id' => 20,
             'code' => $this->faker->uuid,
-            'date' => Carbon::now()->format('Y-m-d'),
             'start_balance' => 0,
         ];
         $this->actingAs($this->mainUser)

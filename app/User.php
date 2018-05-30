@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -50,7 +51,26 @@ class User extends Authenticatable
 
         return 'unknown';
     }
-    
+
+    public function isAssociate()
+    {
+        foreach($this->associates as $associate)
+        {
+            if($associate->pivot->associated_user_id == Auth::id()){
+                return (bool) true;
+            }
+            return (bool) false;
+
+        }
+
+        // foreach ($user->roles as $role)
+        // {
+        //     echo $role->pivot->created_at;
+        // }
+
+        
+    }
+
     public function isAdmin (){
         return (bool)$this->admin;
     }
@@ -110,8 +130,14 @@ class User extends Authenticatable
         return $users;
     }
 
-    public function accounts()
+    public function associates ()
     {
-        return $this->hasMany('App\Account', 'owner_id');
+        return $this->belongsToMany('App\User', 'associate_members', 'main_user_id', 'associated_user_id');
     }
+
+    public function associatedWith()
+    {
+        return $this->belongsToMany('App\User','associate_members', 'associated_user_id', 'main_user_id');
+    }
+
 }

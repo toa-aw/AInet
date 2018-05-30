@@ -10,23 +10,39 @@ use App\User;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index()
-    {   
-        $users = \App\User::all();
-        return view('users.index', compact('users'));
-    }
-
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function groupPrfofiles()
+    public function associatedTo()
     {
-        
+        $users = Auth::user()->associatedWith()->paginate(40);
+        $bool = true;
+        return view('users.associates', compact('users', 'bool'));
+    }
+
+    public function myAssociates()
+    {
+        $users = Auth::user()->associates()->paginate(40);
+        $bool = false;
+        return view('users.associates', compact('users', 'bool'));
+    }
+
+    public function profiles(Request $request)
+    {
+        $users = User::query();
+
+        if($request->filled('name')){
+            $users = $users->findUsersByName($request->name);   
+        }
+       $users = $users->paginate(40);
+    //    dd($users);
+        return view('users.profiles', compact('users'));
     }
 
     public function edit()
@@ -43,7 +59,7 @@ class UserController extends Controller
         $this->authorize('editUser', $user);
         $data = $request->validated();
 
-         $photo = null;
+        $photo = null;
         if (isset($data['profile_photo'])) {
             $path =  $data['profile_photo']->store('profiles', 'public');
             $photo = basename($path);

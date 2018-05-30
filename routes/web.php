@@ -15,13 +15,16 @@ Route::get('/', 'HomeController@index')->name('home');;
 
 Auth::routes();
 
-Route::get('/users', 'UserController@index')->name('users');
-
 Route::get('/account', 'AccountController@create')->name('accounts.create');
 Route::post('/account', 'AccountController@store')->name('accounts.store');
 
+Route::get('/accounts/{user}', 'AccountController@listAccounts');
+Route::get('/accounts/{user}/opened', 'AccountController@listOpenAccounts');
+Route::get('/accounts/{user}/closed', 'AccountController@listClosedAccounts');
+
 Route::get('/account/{account}', 'AccountController@edit')->name('accounts.edit');
 Route::put('/account/{account}', 'AccountController@update')->name('accounts.update');
+
 Route::get('/users', 'AdminController@index')->name('users');
 
 Route::patch('/users/{user}/block', 'AdminController@block')->name('users.block');
@@ -34,4 +37,9 @@ Route::patch('/me/password', 'UserController@updatePassword')->name('password.up
 
 Route::get('/me/profile', 'UserController@edit')->name('user.edit');
 Route::put('/me/profile', 'UserController@update')->name('user.update');
+
+Route::get('/profiles', 'UserController@profiles')->name('profiles');
+
+Route::get('/me/associates', 'UserController@myAssociates')->name('user.associates');
+Route::get('/me/associate-of', 'UserController@associatedTo')->name('user.associated');
 
