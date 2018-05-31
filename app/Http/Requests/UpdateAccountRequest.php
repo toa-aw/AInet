@@ -33,14 +33,4 @@ class UpdateAccountRequest extends FormRequest
             'start_balance' => 'required|numeric|regex:/^-?[0-9]+(?:\.[0-9]{2})?$/',
         ];
     }
-
-    /*public function withValidator($validator){
-        $validator->after(function ($validator) {
-            $account = \Route::current()->parameter('account');
-            $user = Auth::user();    
-            if ($user->id != $account->owner_id) {
-                $validator->errors()->add('id', 'Utilizador invalido');
-            }
-        });
-    }*/
 }

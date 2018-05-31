@@ -43,3 +43,10 @@ Route::get('/profiles', 'UserController@profiles')->name('profiles');
 Route::get('/me/associates', 'UserController@myAssociates')->name('user.associates');
 Route::get('/me/associate-of', 'UserController@associatedTo')->name('user.associated');
 
+Route::get('/movements/{account}', 'MovementController@index')->name('movements');
+
+Route::get('/movements/{account}/create', 'MovementController@create')->name('movements.create');
+Route::post('/movements/{account}/create', 'MovementController@store')->name('movements.store');
+Route::get('/movement/{movement}', 'MovementController@edit')->name('movements.edit');
+Route::put('/movement/{movement}', 'MovementController@update')->name('movements.update');
+Route::delete('/movement/{movement}', 'MovementController@delete')->name('movements.delete');

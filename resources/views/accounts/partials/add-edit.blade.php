@@ -28,7 +28,7 @@
 </div>
 
 <div class="form-group">
-    <label for="inputFullname">{{ __('Description') }}</label>
+    <label for="inputDescription">{{ __('Description') }}</label>
     <input
         type="text" class="form-control" 
         name="description" id="inputDescription" 

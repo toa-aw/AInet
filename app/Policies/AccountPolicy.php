@@ -43,8 +43,8 @@ class AccountPolicy
      */
     public function update(User $user, Account $account)
     {
-        $user = Auth::user();
-        return $user->isAdmin() || $user->id == $account->owner_id;
+        
+        return $account->owner_id == $user->id;
     }
 
     /**

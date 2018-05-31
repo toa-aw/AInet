@@ -26,7 +26,7 @@ class StoreAccountRequest extends FormRequest
         
         return [
             'account_type_id' => 'required|exists:account_types,id',
-            'date' => 'filled|date_format:Y-m-d',
+            'date' => 'date_format:Y-m-d',
             'code' => 'required|unique:accounts',            
             'description' => 'nullable',            
             'start_balance' => 'required|numeric',

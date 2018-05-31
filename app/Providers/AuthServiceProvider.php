@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use App\User;
+use App\Account;
+use App\Policies\AccountPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Policies\AdminPolicy;
 use App\Policies\UserPolicy;
@@ -21,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         Account::class => AccountPolicy::class,
         // User::class => AdminPolicy::class,
         User::class => UserPolicy::class,
+        Movement::class => MovementPolicy::class,
     ];
 
     /**
