@@ -7,11 +7,9 @@ use App\User;
 use App\Account;
 use App\Movements;
 use App\Policies\AccountPolicy;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Policies\AdminPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\MovementPolicy;
-
 
 class AuthServiceProvider extends ServiceProvider
 {

@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\User;
 use App\Movement;
+use App\Account;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MovementPolicy
@@ -19,8 +20,9 @@ class MovementPolicy
      */
     public function view(User $user, Movement $movement)
     {
-        $account = Account::id($movement->account_id);
-        return $user->isAdmin() || $account->owner_id == $user->id;
+        //dd($movement);
+        $account = Account::find($movement->account_id);
+        return $account->owner_id == $user->id;
     }
 
     /**
@@ -55,6 +57,7 @@ class MovementPolicy
      */
     public function delete(User $user, Movement $movement)
     {
-        //
+        $account = Account::id($movement->account_id);
+        return $user->isAdmin() || $account->owner_id == $user->id;
     }
 }
