@@ -19,6 +19,60 @@ class AccountController extends Controller
         $this->middleware('auth');
     }
 
+    public function delete(Account $account)
+    {
+        $this->authorize('delete', $account);
+        $account->delete();
+        // return back();
+        return redirect()->route('home')->with('success', 'Account created successfully.');
+
+    }
+
+    public function softDelete(Account $account)
+    {
+        $this->authorize('delete', $account);
+        $account->deleted_at = Carbon::now();
+        $account->save();
+        return back();
+        // return redirect()->route('home')->with('success', 'Account created successfully.');
+
+    }
+
+    public function reOpen(Account $account)
+    {
+        $this->authorize('delete', $account);
+        $account->deleted_at = NULL;
+        $account->save();
+        return back();
+        // return redirect()->route('home')->with('success', 'Account created successfully.');
+
+    }
+
+    public function listAccounts (User $user)
+    {
+        // $this->authorize('list');
+        $accounts =  $user->accounts()->get();
+        return view('accounts.list', compact('accounts'));
+
+    }
+
+    public function listOpenAccounts (User $user)
+    {
+        // $this->authorize('list');
+        
+        $accounts =  $user->accounts()->whereNull('deleted_at')->get();
+        return view('accounts.list', compact('accounts'));
+
+    }
+
+    public function listClosedAccounts (User $user)
+    {
+        // $this->authorize('list');
+        $accounts =  $user->accounts()->whereNotNull('deleted_at')->get();
+        return view('accounts.list', compact('accounts'));
+
+    }
+
     public function create(){
         $account = new Account;
         return view('accounts.add',compact('account'));
@@ -58,14 +112,14 @@ class AccountController extends Controller
             'description' => $data['description'] ?? null,            
             'start_balance' => $data['start_balance'],
             'current_balance' => $current_balance - ($start_balance - $data['start_balance']),
-            'last_movement_date' => Carbon::now()->format('Y-m-d'),
+            'last_movement_date' => Carbon::now(),
         ]);
         
         if($request->has('start_balance')){
             if($account->current_balance >= 0 && $account->current_balance > $current_balance){
                 $movement = $account->movements()->create([
                     "movement_category_id" => 6,
-                    "date" => Carbon::now()->format('Y-m-d'),
+                    "date" => Carbon::now(),
                     "value" => $start_balance,
                     "start_balance" => $data['start_balance'],
                     "end_balance" => $data['start_balance'] - $start_balance,
@@ -75,7 +129,7 @@ class AccountController extends Controller
 
             $movement = $account->movements()->create([
                 "movement_category_id" => 8,
-                "date" => Carbon::now()->format('Y-m-d'),
+                "date" => Carbon::now(),
                 "value" => $start_balance,
                 "start_balance" => $data['start_balance'],
                 "end_balance" => $data['start_balance'] - $start_balance,

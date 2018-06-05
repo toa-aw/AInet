@@ -26,6 +26,16 @@ class Account extends Model
         
     ];
 
+    public function hasMovements()
+    {
+        return $this->last_movement_date != null;
+    }
+
+    public function isOpen()
+    {
+        return $this->deleted_at == null;
+    }
+
     public function accountTypeToStr()
     {
         switch ($this->account_type_id) {

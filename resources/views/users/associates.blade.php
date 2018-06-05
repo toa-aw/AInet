@@ -25,7 +25,7 @@
             </td>
             @if($bool == true)
             <td>
-                tomas
+                <a href="{{route('user.accounts', $user->id)}}"> Accounts </a>
             </td>
             @endif
         </tr>
