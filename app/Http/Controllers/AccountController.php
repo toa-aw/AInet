@@ -31,8 +31,8 @@ class AccountController extends Controller
         $data['owner_id'] = $user; 
         $data['current_balance'] = $data['start_balance'];  
         if(!$request->has('date')){
-            $data['date'] = Carbon::now();
-        }              
+            $data['date'] = Carbon::now()->format('Y-m-d');
+        }            
         Account::create($data);    
         return redirect()
             ->route('home')
@@ -58,7 +58,7 @@ class AccountController extends Controller
             'description' => $data['description'] ?? null,            
             'start_balance' => $data['start_balance'],
             'current_balance' => $current_balance - ($start_balance - $data['start_balance']),
-            'last_movement_date' => Carbon::now(),
+            'last_movement_date' => Carbon::now()->format('Y-m-d'),
         ]);
         
         if($request->has('start_balance')){
