@@ -58,31 +58,19 @@ class AccountController extends Controller
             'description' => $data['description'] ?? null,            
             'start_balance' => $data['start_balance'],
             'current_balance' => $current_balance - ($start_balance - $data['start_balance']),
-            'last_movement_date' => Carbon::now()->format('Y-m-d'),
+            'last_movement_date' => Carbon::now(),
         ]);
         
         if($request->has('start_balance')){
-            if($account->current_balance >= 0 && $account->current_balance > $current_balance){
-                $movement = $account->movements()->create([
-                    "movement_category_id" => 6,
-                    "date" => Carbon::now()->format('Y-m-d'),
-                    "value" => $start_balance,
-                    "start_balance" => $data['start_balance'],
-                    "end_balance" => $data['start_balance'] - $start_balance,
-                    "type" => 'expense',
+            foreach ($account->movements as $movement){
+                //$start_balance = $movement->start_balance;
+                $end_balance = $movement->end_balance;
+                $movement->fill([
+                    'start_balance' => $data['start_balance'],
+                    'end_balance' => $end_balance - ($start_balance - $data['start_balance']),
                 ]);
-            }
-
-            $movement = $account->movements()->create([
-                "movement_category_id" => 8,
-                "date" => Carbon::now()->format('Y-m-d'),
-                "value" => $start_balance,
-                "start_balance" => $data['start_balance'],
-                "end_balance" => $data['start_balance'] - $start_balance,
-                "type" => 'revenue',
-            ]);
-
-            $movement->save();
+                $movement->save();
+            }            
         }
         $account->save();
 

@@ -20,7 +20,7 @@
     <tbody>
         @foreach ($movements as $movement)
         <tr>
-            <td> {{ $movement->categoryToStr() }} </td>
+            <td> {{ $movement->getCategoryName($movement->movement_category_id) }} </td>
             <td> {{ $movement->date }} </td>
             <td> {{ $movement->value }} </td>
             <td> {{ $movement->type }} </td>
