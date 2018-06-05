@@ -17,10 +17,13 @@ Auth::routes();
 
 Route::get('/account', 'AccountController@create')->name('accounts.create');
 Route::post('/account', 'AccountController@store')->name('accounts.store');
+Route::delete('/account/{account}', 'AccountController@delete')->name('accounts.delete');
+Route::patch('/account/{account}/close', 'AccountController@softDelete')->name('accounts.soft');
+Route::patch('/account/{account}/reopen', 'AccountController@reOpen')->name('accounts.reopen');
 
-Route::get('/accounts/{user}', 'AccountController@listAccounts');
-Route::get('/accounts/{user}/opened', 'AccountController@listOpenAccounts');
-Route::get('/accounts/{user}/closed', 'AccountController@listClosedAccounts');
+Route::get('/accounts/{user}', 'AccountController@listAccounts')->name('user.accounts');
+Route::get('/accounts/{user}/opened', 'AccountController@listOpenAccounts')->name('user.opened.accounts');
+Route::get('/accounts/{user}/closed', 'AccountController@listClosedAccounts')->name('user.closed.accounts');
 
 Route::get('/account/{account}', 'AccountController@edit')->name('accounts.edit');
 Route::put('/account/{account}', 'AccountController@update')->name('accounts.update');

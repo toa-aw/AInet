@@ -56,6 +56,6 @@ class AccountPolicy
      */
     public function delete(User $user, Account $account)
     {
-        //
+        return $account->owner_id == $user->id;
     }
 }
