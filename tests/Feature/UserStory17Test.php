@@ -83,25 +83,6 @@ class UserStory17Test extends BaseAccountsTest
 
     // @codingStandardsIgnoreStart
     /** @test */
-    public function account_creation_fails_with_same_type()
-    {
-        // @codingStandardsIgnoreEnd
-        // Given, When, Then
-        $this->seedOpenedAccountsForUser($this->mainUser->id);
-        $data = [
-            'account_type_id' => $this->types[0]->id,
-            'code' => $this->faker->uuid,
-            'date' => Carbon::now()->format('Y-m-d'),
-            'start_balance' => 0,
-        ];
-        $this->actingAs($this->mainUser)
-            ->post('/account', $data)
-            ->assertSessionHasErrors(['account_type_id'])
-            ->assertSessionHasNoErrors(['description', 'code', 'date', 'start_balance']);
-    }
-
-    // @codingStandardsIgnoreStart
-    /** @test */
     public function account_creation_fails_with_non_unique_code()
     {
         // @codingStandardsIgnoreEnd
@@ -182,8 +163,9 @@ class UserStory17Test extends BaseAccountsTest
         $this->assertDatabaseHas('accounts', $data);
 
         $storedAccount = DB::table('accounts')->where($data)->first();
+
         $this->assertNotNull($storedAccount->date);
-        $this->assertTrue(new Carbon($storedAccount->date) >= $minDate);
+        $this->assertTrue(Carbon::createFromFormat('Y-m-d', $storedAccount->date) >= $minDate);
     }
 
     // @codingStandardsIgnoreStart

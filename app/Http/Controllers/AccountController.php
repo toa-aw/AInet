@@ -85,7 +85,7 @@ class AccountController extends Controller
         $data['owner_id'] = $user; 
         $data['current_balance'] = $data['start_balance'];  
         if(!$request->has('date')){
-            $data['date'] = Carbon::now();
+            $data['date'] = Carbon::now()->format('Y-m-d');
         }              
         Account::create($data);    
         return redirect()
