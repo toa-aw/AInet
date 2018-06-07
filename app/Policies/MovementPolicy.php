@@ -20,9 +20,13 @@ class MovementPolicy
      */
     public function view(User $user, Movement $movement)
     {
-        //dd($movement);
         $account = Account::find($movement->account_id);
         return $account->owner_id == $user->id;
+    }
+
+    public function uploadDocument(User $user, Movement $movement)
+    {
+        return $movement->account->owner_id == $user->id;
     }
 
     /**

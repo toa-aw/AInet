@@ -1,16 +1,5 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
- */
-
 Route::get('/', 'HomeController@index')->name('home');;
 
 Auth::routes();
@@ -52,3 +41,8 @@ Route::post('/movements/{account}/create', 'MovementController@store')->name('mo
 Route::get('/movement/{movement}', 'MovementController@edit')->name('movements.edit');
 Route::put('/movement/{movement}', 'MovementController@update')->name('movements.update');
 Route::delete('/movement/{movement}', 'MovementController@delete')->name('movements.delete');
+
+Route::post('/documents/{movement}', 'MovementController@associateDocumentToMovement')->name('movement.associateDocument');
+Route::get('/documents/{movement}', 'MovementController@addDocument')->name('movement.addDocument');
+Route::delete('/document/{document}', 'DocumentController@delete')->name('delete.document');
+Route::get('/document/{document}', 'DocumentController@getDocument')->name('get.document');

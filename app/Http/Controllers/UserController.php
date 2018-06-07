@@ -1,16 +1,15 @@
 <?php
 
 namespace App;
-use Illuminate\Http\Request;
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\User;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -35,13 +34,13 @@ class UserController extends Controller
 
     public function profiles(Request $request)
     {
-        $users = User::query();
+        $users = User::with(['associates', 'associatedWith']);
 
-        if($request->filled('name')){
-            $users = $users->findUsersByName($request->name);   
+        if ($request->filled('name')) {
+            $users = $users->findUsersByName($request->name);
         }
-       $users = $users->paginate(40);
-    //    dd($users);
+        $users = $users->paginate(40);
+        //    dd($users);
         return view('users.profiles', compact('users'));
     }
 
@@ -61,10 +60,10 @@ class UserController extends Controller
 
         $photo = null;
         if (isset($data['profile_photo'])) {
-            $path =  $data['profile_photo']->store('profiles', 'public');
+            $path = $data['profile_photo']->store('profiles', 'public');
             $photo = basename($path);
-         }
-        
+        }
+
         $user->fill([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -73,14 +72,14 @@ class UserController extends Controller
         ]);
 
         $user->save();
-        
+
         return redirect()->route('home')->with('status', 'User updated succesfuly.');
     }
 
     public function editPassword()
     {
         $this->authorize('editUser', Auth::user());
-        return view('users.password_edit');    
+        return view('users.password_edit');
     }
 
     public function updatePassword(UpdatePasswordRequest $request)
