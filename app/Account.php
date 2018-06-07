@@ -14,7 +14,7 @@ class Account extends Model
      * @var array
      */
     protected $fillable = [
-        'account_type_id', 'date', 'code', 'description', 'start_balance', 'owner_id', 'current_balance',
+        'account_type_id', 'date', 'code', 'description', 'start_balance', 'owner_id', 'current_balance', 'document_id'
     ];
 
     /**
@@ -61,6 +61,6 @@ class Account extends Model
 
     public function movements()
     {
-        return $this->hasMany('App\Movement', 'account_id');
+        return $this->hasMany('App\Movement');
     }
 }

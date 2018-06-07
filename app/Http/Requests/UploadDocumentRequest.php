@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class UpdateUserRequest extends FormRequest
+class UploadDocumentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +23,9 @@ class UpdateUserRequest extends FormRequest
      */
     public function rules()
     {
-        $id = Auth::id();
         return [
-            
-            'name' => 'required|string|max:255|regex:/^[\pL\s]+$/u',
-            'email' => 'required|email|max:255|unique:users,email,'.$id,
-            'phone' => 'nullable|regex:/^(\+\d{2,3})?\s*\d{3}\s*\d{3}\s*\d{3}$/',
-            'profile_photo' => 'nullable|image',
+            'document_description' => 'nullable|string',
+            'document_file' => 'required|file|mimes:jpeg,png,pdf',
         ];
     }
 }

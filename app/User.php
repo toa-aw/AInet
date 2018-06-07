@@ -52,21 +52,30 @@ class User extends Authenticatable
         return 'unknown';
     }
 
-    public function isAssociate()
+    public function isAssociate($id)
     {
         foreach($this->associates as $associate)
-        {
-            if($associate->pivot->associated_user_id == Auth::id()){
+        {   
+            if($associate->pivot->associated_user_id == $id){
                 return (bool) true;
             }
             return (bool) false;
 
-        }
-        // foreach ($user->roles as $role)
-        // {
-        //     echo $role->pivot->created_at;
-        // }        
+        }   
     }
+
+    public function isAssociateOf($id)
+    {
+        foreach($this->associatedWith as $associate)
+        {
+            if($associate->pivot->main_user_id == $id){
+                return (bool) true;
+            }
+            return (bool) false;
+
+        }   
+    }
+
 
     public function isAdmin (){
         return (bool)$this->admin;
@@ -102,7 +111,6 @@ class User extends Authenticatable
 
     public static function buildQuery(Request $request)
     {
-        // dd($request->name);
         $query = User::query();
         dd($query);
         $query->where('name','like', $request->input('name'));

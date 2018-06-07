@@ -4,7 +4,7 @@
 
 @section('content')
 {{-- {{dd($user->id)}} --}}
-<form action="{{ route('user.update', $user) }}" method="post">
+<form action="{{ route('user.update', $user) }}" method="post" enctype="multipart/form-data">
 @method('put')
 @csrf
 

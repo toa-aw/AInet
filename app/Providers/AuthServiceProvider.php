@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\Gate;
 use App\User;
 use App\Account;
 use App\Movement;
+use App\Document;
 use App\Policies\AccountPolicy;
 use App\Policies\AdminPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\MovementPolicy;
+use App\Policies\DocumentPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -20,11 +22,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
         Account::class => AccountPolicy::class,
-        // User::class => AdminPolicy::class,
         User::class => UserPolicy::class,
         Movement::class => MovementPolicy::class,
+        Document::class => DocumentPolicy::class,
     ];
 
     /**

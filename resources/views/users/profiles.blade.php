@@ -25,7 +25,7 @@
         <tr>
             <th>Name</th>
             <th>Profile Photo</th>
-            <th>Groupe</th>
+            <th>Group</th>
         </tr>
     </thead>
     <tbody>
@@ -42,13 +42,12 @@
             </td>
 
             <td>
-                @if($user->isAssociate())
-                yes
-                @else
-                no
+                @if($user->isAssociate(Auth::id()))
+                    <span>associate-of</span>
                 @endif
-                
-               
+                @if($user->isAssociateOf(Auth::id()))
+                    <span>associate</span>
+                @endif
             </td>
             
         </tr>
