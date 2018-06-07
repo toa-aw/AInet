@@ -16,13 +16,15 @@ class Movement extends Model
     public function getCategoryName($movement_category_id)
     {
         $category = MovementCategory::where('id', $movement_category_id)->get();
-        
-        return $category['0']['name']; 
+        //$category = MovementCategory::with('movement');
+        //$category = $category->where('id', $movement_category_id)->first();
+        //dd(MovementCategory::with('movement')->get());
+        return $category;  
     }
 
     public function account()
     {
-        return $this->belongsTo('App\Account');
+        return $this->belongsTo('App\Account', 'id', 'account_id');
     }
 
     public function movement_category(){

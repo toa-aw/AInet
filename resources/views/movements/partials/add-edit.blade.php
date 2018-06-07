@@ -12,20 +12,20 @@
     <label for="inputCategory">{{ __('Movement Category') }}</label>
     <select name="movement_category_id" id="inputCategory" class="form-control">
         <option disabled selected> -- select an option -- </option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '1' )}} value="1">food</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '2' )}} value="2">clothes</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '3' )}} value="3">services</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '4' )}} value="4">electricity</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '5' )}} value="5">phone</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '6' )}} value="6">fuel</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '7' )}} value="7">mortgage payment</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '8' )}} value="8">salary</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '9' )}} value="9">bonus</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '10' )}} value="10">royalties</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '11' )}} value="11">interests</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '12' )}} value="12">gifts</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '13' )}} value="13">dividends</option>
-        <option {{is_selected(old('movement_category_id', $movement->movement_category_id), '14' )}} value="14">product sales</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '1' ) }} value="1">food</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '2' ) }} value="2">clothes</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '3' ) }} value="3">services</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '4' ) }} value="4">electricity</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '5' ) }} value="5">phone</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '6' ) }} value="6">fuel</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '7' ) }} value="7">mortgage payment</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '8' ) }} value="8">salary</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '9' ) }} value="9">bonus</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '10') }} value="10">royalties</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '11') }} value="11">interests</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '12') }} value="12">gifts</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '13') }} value="13">dividends</option>
+        <option {{ is_selected(old('movement_category_id', $movement->movement_category_id), '14') }} value="14">product sales</option>
     </select>
 </div>
 

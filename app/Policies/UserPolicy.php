@@ -29,4 +29,8 @@ class UserPolicy
     {
         return $user->isAdmin() && $user->id != $model->id;  
     }
+
+    public function deleteAssociate(User $user, User $model){
+        return $user->isAdmin() || $user->id == $model->id;
+    }
 }

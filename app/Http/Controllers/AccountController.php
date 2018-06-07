@@ -102,44 +102,46 @@ class AccountController extends Controller
 
     public function update(UpdateAccountRequest $request, Account $account)
     {
+        //dd($account->id);
         $this->authorize('update', $account); 
         $data = $request->validated();
         $start_balance = $account->start_balance;
         $current_balance = $account->current_balance;
         $account->fill([
             'account_type_id' => $data['account_type_id'],
-            'date' => $data['date'],
+            'date' => $data['date'] ?? $account->date,
             'code' => $data['code'],            
             'description' => $data['description'] ?? null,            
             'start_balance' => $data['start_balance'],
             'current_balance' => $current_balance - ($start_balance - $data['start_balance']),
             'last_movement_date' => Carbon::now()->format('Y-m-d'),
         ]);
-        
-        if($request->has('start_balance')){
-            if($account->current_balance >= 0 && $account->current_balance > $current_balance){
-                $movement = $account->movements()->create([
-                    "movement_category_id" => 6,
-                    "date" => Carbon::now(),
-                    "value" => $start_balance,
-                    "start_balance" => $data['start_balance'],
-                    "end_balance" => $data['start_balance'] - $start_balance,
-                    "type" => 'expense',
-                ]);
-            }
-
-            $movement = $account->movements()->create([
-                "movement_category_id" => 8,
-                "date" => Carbon::now(),
-                "value" => $start_balance,
-                "start_balance" => $data['start_balance'],
-                "end_balance" => $data['start_balance'] - $start_balance,
-                "type" => 'revenue',
-            ]);
-
-            $movement->save();
-        }
         $account->save();
+
+        if($request->has('start_balance')){
+            foreach ($account->movements as $movement){
+                $m_start_balance = $movement->start_balance;
+                $end_balance = $movement->end_balance;
+                $value = $movement->value;
+                //$movement->type == 'revenue'
+                if($data['start_balance'] >= $m_start_balance){   
+                    //dd($start_balance + ($data['start_balance'] - $start_balance));
+                    $movement->fill([
+                        'start_balance' => $m_start_balance + ($data['start_balance'] - $m_start_balance),
+                        'end_balance' => $end_balance + ($data['start_balance'] - $m_start_balance),
+                        //'end_balance' => $movement->start_balance + $value,
+                    ]);               
+                }else{
+                    //dd($start_balance + ($start_balance - $data['start_balance']);     
+                    $movement->fill([
+                        'start_balance' => $m_start_balance + ($m_start_balance - $data['start_balance']),
+                        'end_balance' => $end_balance + ($m_start_balance - $data['start_balance']),
+                        //'end_balance' => $movement->start_balance + $value,
+                    ]);
+                }                      
+                $movement->save();
+            }              
+        }      
 
         return redirect()
             ->route('home')

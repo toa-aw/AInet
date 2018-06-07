@@ -11,6 +11,8 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreAssociateRequest;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -94,5 +96,32 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('home')->with('status', 'Password has been changed.');
+    }
+
+    public function createAssociate(User $user){        
+        return view('users.add_associate', compact('user'));
+    }
+
+    public function storeAssociate(StoreAssociateRequest $request){
+        $user = Auth::user();
+        $data = $request->validated();        
+        $associate = User::find($data['associated_user']);
+        //dd($user->id);
+        $user->associates()->attach($associate, ['created_at' => Carbon::now()]);
+        //$user->save();
+
+        return redirect()->route('user.associates')->with('status', 'User associated successfully.');
+    }
+
+    public function deleteAssociate(User $user){
+        $main_user = Auth::user();
+        $this->authorize('deleteAssociate', $main_user);        
+        //dd($user->id);
+        if($main_user->hasAssociate($user)){
+            dd($user);
+            $main_user->associates()->detach($user);
+        }        
+
+        return redirect()->route('user.associates')->with('status', 'User dissociated successfully.');
     }
 }

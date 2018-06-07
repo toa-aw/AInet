@@ -2,6 +2,9 @@
 @section('title', 'List of Users') 
 @section('content')
 
+<div>  
+    <a class="btn btn-primary" href="{{route('user.add.associate')}}">Add Associate</a>
+</div>
 @if (count($users))
 <table class="table table-striped">
     <thead>
@@ -22,6 +25,13 @@
 
             <td>
                 {{ $user->email }}
+            </td>
+            <td>                          
+                <form action="{{route('user.delete.associate', $user->id)}}" method="POST" role="form" class="inline">
+                    @method('delete')
+                    @csrf
+                    <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                </form>        
             </td>
             @if($bool == true)
             <td>

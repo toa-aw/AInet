@@ -42,8 +42,7 @@ class AccountPolicy
      * @return mixed
      */
     public function update(User $user, Account $account)
-    {
-        
+    {        
         return $account->owner_id == $user->id;
     }
 
@@ -57,5 +56,10 @@ class AccountPolicy
     public function delete(User $user, Account $account)
     {
         return $account->owner_id == $user->id;
+    }
+
+    public function createMovement(User $user, Account $account)
+    {
+        return $user->id == $account->owner_id;
     }
 }

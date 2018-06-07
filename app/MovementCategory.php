@@ -14,6 +14,6 @@ protected $fillable = [
     ];
 
     public function movement(){
-        return $this->belongsTo('App\Movement', 'movement_category_id');
+        return $this->belongsToMany('App\Movement', 'movement_category_id');
     }
 }
