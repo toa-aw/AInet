@@ -48,4 +48,4 @@ Route::delete('/movement/{movement}', 'MovementController@delete')->name('moveme
 Route::post('/documents/{movement}', 'MovementController@associateDocumentToMovement')->name('movement.associateDocument');
 Route::get('/documents/{movement}', 'MovementController@addDocument')->name('movement.addDocument');
 Route::delete('/document/{document}', 'DocumentController@delete')->name('delete.document');
-Route::get('/document/{document}', 'DocumentController@getDocument')->name('get.document');
+Route::get('/document/{document}', 'DocumentController@downloadDocument')->name('get.document');
