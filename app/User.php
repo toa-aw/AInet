@@ -149,17 +149,4 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Account', 'owner_id');
     }
-
-    public function hasAssociate($associated_user){
-        foreach(Auth::user()->associates as $associate)
-        {
-            dump($associate->id);
-            if($associate->pivot->associated_user_id == $associated_user){
-                return (bool) true;
-            }
-            return (bool) false;
-
-        }
-    }
-
 }

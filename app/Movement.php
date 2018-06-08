@@ -24,7 +24,7 @@ class Movement extends Model
 
     public function account()
     {
-        return $this->belongsTo('App\Account', 'id', 'account_id');
+        return $this->belongsTo('App\Account');
     }
 
     public function movement_category()
