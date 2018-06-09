@@ -26,12 +26,21 @@ class UpdateMovementRequest extends FormRequest
     {
         return [
             'movement_category_id' => 'required|exists:movement_categories,id',
-            'type' => ['required', Rule::in(['revenue','expense']), ],
+            'type' => 'nullable',
             'date' => 'required|date_format:Y-m-d',
-            'value' => 'required|numeric|gt:0',
-            'description' => 'nullable',
+            'value' => 'required|numeric|min:0.01',
+            'description' => 'nullable|string',
             'document_file' => 'nullable|file|mimes:jpeg,png,pdf',
             'document_description' => 'nullable|string',  
         ];
+    }
+
+    public function withValidator($validator)
+    {        
+        $validator->after(function ($validator) {            
+            if (!isset($this->document_file) && isset($this->document_description)) {
+                $validator->errors()->add('document_description', 'Document file is not set.');
+            }
+        });
     }
 }

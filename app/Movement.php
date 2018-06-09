@@ -11,18 +11,12 @@ class Movement extends Model
     //public $updated_at = false;
 
     protected $fillable = [
-        'value', 'start_balance', 'end_balance', 'account_id', 'date', 'movement_category_id', 'type', 'document_id',
+        'value', 'start_balance', 'end_balance', 'account_id', 'date', 'movement_category_id', 'type', 'document_id', 'description', 'created_at',
     ];
 
     public function getCategoryName($movement_category_id)
     {
         $category = MovementCategory::where('id', $movement_category_id)->first();
-        //$category = MovementCategory::with('movements:name')->get();
-        //$categories = Movement::with('movement_category:id,name')->get();
-        //$category = $categories->where('id', $movement_category_id)->first();
-        //dd($category);
-        //dd($category->movement_category->name);
-        //return $category->movement_category->name;
         return $category->name;  
     }
 

@@ -115,6 +115,7 @@ class AccountController extends Controller
             'last_movement_date' => Carbon::now()->format('Y-m-d'),
         ]);
         $account->save();
+        
         if($request->has('start_balance')){
             for($i=0; $i<count($account->movements); $i++){
                 $movement = $account->movements[$i];
@@ -150,7 +151,6 @@ class AccountController extends Controller
                 $movement->save();
             }                           
         } 
-        
         return redirect()
             ->route('home')
             ->with('success', 'Account saved successfully.');

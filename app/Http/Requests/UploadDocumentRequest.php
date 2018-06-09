@@ -23,9 +23,10 @@ class UploadDocumentRequest extends FormRequest
      */
     public function rules()
     {
+        //dd($this->document_description);
         return [
             'document_description' => 'nullable|string',
             'document_file' => 'required|file|mimes:jpeg,png,pdf',
-        ];
+        ];        
     }
 }

@@ -84,31 +84,43 @@ class MovementController extends Controller
         $this->authorize('createMovement', $account);
         $data = $request->validated();   
         
-        $category = MovementCategory::find($data['movement_category_id']);        
-        if($data['type'] == "revenue"){ 
+        $category = MovementCategory::find($data['movement_category_id']);  
+        $movement_type = $request->input('type');
+        if($movement_type == "revenue"){ 
             $movement = Movement::create([
                 'account_id' => $account->id,
-                'type' => $category->type,
+                'movement_category_id' => $data['movement_category_id'],
+                'date' => $data['date'],
+                'value' => $data['value'],
                 'start_balance' => $account->start_balance, 
                 'end_balance' =>  $account->start_balance + $data['value'],
+                'description' => $data['description'] ?? null,
+                'type' => $category->type,
             ]);          
         }else{
             $movement = Movement::create([
                 'account_id' => $account->id,
-                'type' => $category->type,
+                'movement_category_id' => $data['movement_category_id'],
+                'date' => $data['date'],
+                'value' => $data['value'],
                 'start_balance' => $account->start_balance, 
                 'end_balance' => $account->start_balance - $data['value'],
+                'description' => $data['description'] ?? null,
+                'type' => $category->type,               
             ]);
         }            
         
-        //dd(isset($data['document_file']));
         if(isset($data['document_file'])){
+            if ($movement->hasDocument()) {
+                $document = Document::find($movement->document_id);
+                $old_path = 'documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type;
+                Storage::delete($old_path);
+                $document->delete();
+            }
             $documentName =  $movement->id . '.' . $data['document_file']->extension();
 
             $path = $data['document_file']->storeAs('documents/' . $account->id, $documentName);
             $file = basename($path);
-            // $exists = Storage::disk('local')->exists($path);
-            // dd($exists);
 
             $document = Document::create([
                 'type' => $data['document_file']->extension(),
@@ -116,10 +128,9 @@ class MovementController extends Controller
                 'description' => $data['document_description'],
             ]);
 
-            $movement['documen_id'] = $document->id;
+            $movement['document_id'] = $document->id;
             $movement->save();
-        }
-        
+        }        
 
         return redirect()
             ->route('movements', $account->id)
@@ -130,30 +141,39 @@ class MovementController extends Controller
     {
         $this->authorize('update', $movement); 
         $data = $request->validated();
+        //$movement_type = $request->input('type');
+        $category = MovementCategory::find($data['movement_category_id']);
+        $movement->fill([
+            'movement_category_id' => $data['movement_category_id'],
+            'date' => $data['date'],
+            'value' => $data['value'],
+            'start_balance' => $movement->start_balance, 
+            'end_balance' =>  $movement->end_balance,
+            'description' => $data['description'] ?? null,
+            'type' => $category->type,
+        ]);       
 
-        if ($movement->hasDocument()) {
-            $document = Document::find($movement->document_id);
-            $old_path = 'documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type;
-            Storage::delete($old_path);
-            $document->delete();
+        if(isset($data['document_file'])){
+            if ($movement->hasDocument()) {
+                $document = Document::find($movement->document_id);
+                $old_path = 'documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type;
+                Storage::delete($old_path);
+                $document->delete();
+            }
+
+            $documentName =  $movement->id . '.' . $data['document_file']->extension();
+            $path = $data['document_file']->storeAs('documents/' . $movement->account_id, $documentName);
+            $file = basename($path);
+            $document = Document::create([
+                'type' => $data['document_file']->extension(),
+                'original_name' => $data['document_file']->getClientOriginalName(),
+                'description' => $data['document_description'],
+            ]);
+            $movement['document_id'] = $document->id;     
+        
         }
-
-        $documentName = $movement->id . '.' . $data['document_file']->extension();
-
-        $path = $data['document_file']->storeAs('documents/' . $movement->account_id, $documentName);
-        $file = basename($path);
-        // $exists = Storage::disk('local')->exists($path);
-        // dd($exists);
-
-        $documet = Document::create([
-            'type' => $data['document_file']->extension(),
-            'original_name' => $data['document_file']->getClientOriginalName(),
-            'description' => $data['document_description'],
-        ]);
-
-        $movement['document_id'] = $documet->id;
+            
         $movement->save();
-
         return redirect()
             ->route('movements', $movement->account_id)
             ->with('success', 'Movement saved successfully.');
