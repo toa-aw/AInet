@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Document;
 use App\Movement;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
@@ -25,9 +26,11 @@ class DocumentController extends Controller
         return redirect()->route('home')->with('success', 'Document deleted successfully.');
     }
 
-    public function get(Document $document)
+    public function downloadDocument(Document $document)
     {
-
-        return redirect()->route('home')->with('success', 'Document deleted successfully.');
+        $this->authorize('download', $document);
+        $movement = Movement::where('document_id', $document->id)->first();
+        $path = 'documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type;    
+        return Storage::download($path, $document->original_name);
     }
 }
