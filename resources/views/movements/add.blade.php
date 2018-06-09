@@ -6,7 +6,7 @@
 @if($errors->any())
     @include('partials.errors')
 @endif
-<form action="{{route('movements.store', $account->id)}}" method="post" class="form-group">
+<form action="{{ route('movements.store', $account->id) }}" method="post" class="form-group" enctype="multipart/form-data">
     @include('movements.partials.add-edit')
     <div class="form-group">
         <button type="submit" class="btn btn-success" name="ok">Create</button>

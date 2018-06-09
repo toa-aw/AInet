@@ -116,11 +116,15 @@ class UserController extends Controller
     public function deleteAssociate(User $user){
         $main_user = Auth::user();
         $this->authorize('deleteAssociate', $main_user);        
-        //dd($user->id);
-        if($main_user->hasAssociate($user)){
-            dd($user);
-            $main_user->associates()->detach($user);
-        }        
+        //$associate = $main_user->associates()->where('id', $user->id)->first();
+        //dd($associate);
+        if(!$main_user->isAssociate($user->id)){
+            //dd($main_user->isAssociate($user->id));
+            //return redirect()->route('user.associates')->with('errors', 'User is not associated.');
+            abort(404);
+        }   
+        
+        $main_user->associates()->detach($user);
 
         return redirect()->route('user.associates')->with('status', 'User dissociated successfully.');
     }

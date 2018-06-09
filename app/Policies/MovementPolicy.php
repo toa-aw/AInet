@@ -22,6 +22,7 @@ class MovementPolicy
     public function view(User $user, Movement $movement)
     {
         $account = Account::find($movement->account_id);
+       
         return $account->owner_id == $user->id;
     }
 
@@ -38,7 +39,7 @@ class MovementPolicy
      */
     public function create(User $user)
     {
-        return Auth::id() == $user->id;
+        return true;
     }
 
     /**
@@ -63,7 +64,7 @@ class MovementPolicy
      */
     public function delete(User $user, Movement $movement)
     {
-        $account = Account::id($movement->account_id);
+        $account = Account::find($movement->account_id);
         return $account->owner_id == $user->id;
     }
 }

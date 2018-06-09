@@ -5,7 +5,7 @@
 <form action="{{route('movement.associateDocument', $id)}}" method="post" class="form-group" enctype="multipart/form-data">
     @csrf
     <div class="form-group row">
-        <label for="file" class="col-md-4 col-form-label text-md-right">{{ __('Mevement File') }}</label>
+        <label for="file" class="col-md-4 col-form-label text-md-right">{{ __('Movement File') }}</label>
         <div class="col-md-6">
             <input id="file" type="file" name="document_file" autofocus> 
             @if ($errors->has('document_file'))

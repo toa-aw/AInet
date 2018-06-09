@@ -12,6 +12,15 @@
 </div>
 
 <div class="form-group">
+        <label for="date">{{ __('Date')}}</label>
+        <input
+            type="date" class="form-control"
+            name="date" id="date"
+            value="{{old('date', $account->date) }}"
+        />
+</div>
+
+<div class="form-group">
     <label for="inputCode">{{ __('Code') }}</label>
     <input
         type="text" class="form-control"

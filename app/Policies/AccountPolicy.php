@@ -60,6 +60,11 @@ class AccountPolicy
 
     public function createMovement(User $user, Account $account)
     {
-        return $user->id == $account->owner_id;
+        return $account->owner_id == $user->id;
+    }
+
+    public function viewMovements(User $user, Account $account)
+    {
+        return $account->owner_id == $user->id;
     }
 }

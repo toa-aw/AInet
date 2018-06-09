@@ -33,8 +33,8 @@ class StoreAssociateRequest extends FormRequest
     {        
         $validator->after(function ($validator) {
             $user = Auth::user();
-            //dd($this->associated_user);
-            if ($user->hasAssociate($this->associated_user)) {
+            //dd($this);
+            if ($user->isAssociate($this->associated_user)) {
                 $validator->errors()->add('associated_user', 'User already associated.');
             }
             if($user->id == $this->associated_user){

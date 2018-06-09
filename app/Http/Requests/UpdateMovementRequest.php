@@ -28,8 +28,10 @@ class UpdateMovementRequest extends FormRequest
             'movement_category_id' => 'required|exists:movement_categories,id',
             'type' => ['required', Rule::in(['revenue','expense']), ],
             'date' => 'required|date_format:Y-m-d',
-            'value' => 'required|numeric',
+            'value' => 'required|numeric|gt:0',
             'description' => 'nullable',
+            'document_file' => 'nullable|file|mimes:jpeg,png,pdf',
+            'document_description' => 'nullable|string',  
         ];
     }
 }

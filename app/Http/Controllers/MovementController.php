@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreMovementRequest;
 use App\Http\Requests\UpdateMovementRequest;
 use Illuminate\Support\Facades\Storage;
+use App\MovementCategory;
 
 class MovementController extends Controller
 {
@@ -58,18 +59,16 @@ class MovementController extends Controller
 
     public function index(Account $account)
     {
+        $this->authorize('viewMovements', $account);
         $movements = Movement::where('account_id', $account->id)
             ->orderBy('date', 'desc')
             ->orderBy('created_at', 'desc')
             ->paginate(40);
-        foreach ($movements as $movement) {
-            $this->authorize('view', $movement);
-        }
+
         return view('movements.index', compact('movements', 'account'));
     }
 
-    public function create(Account $account){
-        
+    public function create(Account $account){        
         $this->authorize('createMovement', $account);
         $movement = new Movement;
         return view('movements.add', compact('movement', 'account'));
@@ -83,11 +82,45 @@ class MovementController extends Controller
     public function store(StoreMovementRequest $request, Account $account)
     {
         $this->authorize('createMovement', $account);
-        $data = $request->validated(); 
-        $data['account_id'] = $account->id;
-        $data['start_balance'] = $account->start_balance;
-        $data['end_balance'] = $account->start_balance + $data['value'];
-        Movement::create($data);    
+        $data = $request->validated();   
+        
+        $category = MovementCategory::find($data['movement_category_id']);        
+        if($data['type'] == "revenue"){ 
+            $movement = Movement::create([
+                'account_id' => $account->id,
+                'type' => $category->type,
+                'start_balance' => $account->start_balance, 
+                'end_balance' =>  $account->start_balance + $data['value'],
+            ]);          
+        }else{
+            $movement = Movement::create([
+                'account_id' => $account->id,
+                'type' => $category->type,
+                'start_balance' => $account->start_balance, 
+                'end_balance' => $account->start_balance - $data['value'],
+            ]);
+        }            
+        
+        //dd(isset($data['document_file']));
+        if(isset($data['document_file'])){
+            $documentName =  $movement->id . '.' . $data['document_file']->extension();
+
+            $path = $data['document_file']->storeAs('documents/' . $account->id, $documentName);
+            $file = basename($path);
+            // $exists = Storage::disk('local')->exists($path);
+            // dd($exists);
+
+            $document = Document::create([
+                'type' => $data['document_file']->extension(),
+                'original_name' => $data['document_file']->getClientOriginalName(),
+                'description' => $data['document_description'],
+            ]);
+
+            $movement['documen_id'] = $document->id;
+            $movement->save();
+        }
+        
+
         return redirect()
             ->route('movements', $account->id)
             ->with('success', 'Movement created successfully.');
@@ -97,7 +130,28 @@ class MovementController extends Controller
     {
         $this->authorize('update', $movement); 
         $data = $request->validated();
-        $movement->fill($data);
+
+        if ($movement->hasDocument()) {
+            $document = Document::find($movement->document_id);
+            $old_path = 'documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type;
+            Storage::delete($old_path);
+            $document->delete();
+        }
+
+        $documentName = $movement->id . '.' . $data['document_file']->extension();
+
+        $path = $data['document_file']->storeAs('documents/' . $movement->account_id, $documentName);
+        $file = basename($path);
+        // $exists = Storage::disk('local')->exists($path);
+        // dd($exists);
+
+        $documet = Document::create([
+            'type' => $data['document_file']->extension(),
+            'original_name' => $data['document_file']->getClientOriginalName(),
+            'description' => $data['document_description'],
+        ]);
+
+        $movement['document_id'] = $documet->id;
         $movement->save();
 
         return redirect()
@@ -108,6 +162,14 @@ class MovementController extends Controller
     public function delete(Movement $movement)
     {
         $this->authorize('delete', $movement);
+        
+        if ($movement->hasDocument()) {
+            $document = Document::find($movement->document_id);
+            $old_path = 'documents/' . $movement->account_id . '/' . $movement->id . '.' . $document->type;
+            Storage::delete($old_path);
+            $document->delete();
+        }
+
         $movement->delete();
 
         return redirect()

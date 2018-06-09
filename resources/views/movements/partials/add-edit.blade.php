@@ -53,3 +53,20 @@
         name="description" id="inputDescription" 
         placeholder="Description" value="{{old('description', $movement->description) }}"/> 
 </div>
+
+<div class="form-group">
+    <label for="inputFile">{{ __('Document') }}</label>
+        <input 
+            type="file" class="form-control"
+            name="document_file" id="inputFile"/>        
+</div>
+
+<div class="form-group">
+        <label for="description">{{ __('Document Description') }}</label>        
+        <input id="description" type="text" class="form-control{{ $errors->has('document_description') ? ' is-invalid' : '' }}" name="document_description" value="{{ old('document_description') }}" autofocus>
+        @if ($errors->has('document_description'))
+            <span class="invalid-feedback">
+                <strong>{{ $errors->first('document_description') }}</strong>
+            </span> 
+        @endif        
+</div>
